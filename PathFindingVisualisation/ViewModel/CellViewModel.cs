@@ -28,7 +28,7 @@ namespace PathFindingVisualisation.ViewModel
         Empty,
         Wall,
         Start,
-        End,
+        Goal,
         Path,
         Visited,
         Opened,

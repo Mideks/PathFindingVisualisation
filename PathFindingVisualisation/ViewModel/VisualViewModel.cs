@@ -22,6 +22,10 @@ namespace PathFindingVisualisation.ViewModel
 
         public VisualViewModel()
         {
+            // обязательно задать начальную и конечную точку иначе вылет нахрен)
+            CellGrid.ChangeCellState(new Location(0,0), CellState.Start);
+            CellGrid.ChangeCellState(new Location(9, 9), CellState.Goal);
+            
             RunSearch();
             Clear();
         }
@@ -59,9 +63,8 @@ namespace PathFindingVisualisation.ViewModel
                 CellGrid.ChangeCellState(wall, CellState.Wall);
             }
 
-            // todo: добавление выбора стартовой и конечной точки
-            var start = new Location(0, 0);
-            var goal = new Location(9, 9);
+            var start = CellGrid.Start;
+            var goal = CellGrid.Goal;
 
             //grid = GridFromString();
             PathFinder searcher = GetFinder();
@@ -78,7 +81,7 @@ namespace PathFindingVisualisation.ViewModel
             CreatePath(result, goal);
 
             CellGrid.ChangeCellState(start, CellState.Start);
-            CellGrid.ChangeCellState(goal, CellState.End);
+            CellGrid.ChangeCellState(goal, CellState.Goal);
         }
 
         private void CreatePath(Dictionary<Location, VisitedLocation> result, Location goal)
