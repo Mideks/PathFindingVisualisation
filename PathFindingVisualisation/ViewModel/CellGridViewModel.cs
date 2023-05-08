@@ -24,6 +24,12 @@ namespace PathFindingVisualisation.ViewModel
             MoveGoal
         }
 
+        private HashSet<Location> walls = new();
+        private Dictionary<Location, CellState> changedCellStates = new();
+        private bool isDrawing = true;
+
+        private EditMode editMode;
+
         public ObservableCollection<CellViewModel> Cells { get; set; } = new();
         public Location Start
         {
@@ -52,16 +58,11 @@ namespace PathFindingVisualisation.ViewModel
             }
         }
 
-
-        private HashSet<Location> walls = new();
-        private Dictionary<Location, CellState> changedCellStates = new();
-        private bool isDrawing = true;
-
-        private EditMode editMode;
-
-
-        public CellGridViewModel()
+        public CellGridViewModel(Location start, Location goal)
         {
+            ChangeCellState(start, CellState.Start);
+            ChangeCellState(start, CellState.Goal);
+
             // todo: возможность задавать размер динамически
             var width = 25;
             var height = 25;

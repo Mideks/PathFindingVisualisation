@@ -16,16 +16,13 @@ namespace PathFindingVisualisation.ViewModel
     public partial class VisualViewModel : ObservableObject
     {
         [ObservableProperty]
-        private CellGridViewModel cellGrid = new();
+        private CellGridViewModel cellGrid;
         [ObservableProperty]
         public PointCollection path = new();
 
         public VisualViewModel()
         {
-            // обязательно задать начальную и конечную точку иначе вылет нахрен)
-            CellGrid.ChangeCellState(new Location(0,0), CellState.Start);
-            CellGrid.ChangeCellState(new Location(9, 9), CellState.Goal);
-            
+            CellGrid = new CellGridViewModel(new Location(0, 0), new Location(9, 9));
             RunSearch();
             Clear();
         }
