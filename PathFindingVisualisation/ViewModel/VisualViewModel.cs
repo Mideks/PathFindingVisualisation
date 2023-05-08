@@ -30,13 +30,6 @@ namespace PathFindingVisualisation.ViewModel
         [RelayCommand]
         private void Clear()
         {
-            foreach (var cell in CellGrid.Cells)
-            {
-                if (cell.State == CellState.Visited ||
-                    cell.State == CellState.Opened ||
-                    cell.State == CellState.Path)
-                    CellGrid.ChangeCellState(new Location(cell.X, cell.Y), CellState.Empty);
-            }
             Path = new();
             CellGrid.Clear();
         }

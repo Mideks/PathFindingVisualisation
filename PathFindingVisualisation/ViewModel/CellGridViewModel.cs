@@ -85,6 +85,14 @@ namespace PathFindingVisualisation.ViewModel
         #region Methods
         public void Clear()
         {
+            foreach (var cell in Cells)
+            {
+                if (cell.State == CellState.Visited ||
+                    cell.State == CellState.Opened ||
+                    cell.State == CellState.Path)
+                    ChangeCellState(new Location(cell.X, cell.Y), CellState.Empty);
+            }
+
             changedCellStates.Clear();
         }
 
