@@ -60,9 +60,6 @@ namespace PathFindingVisualisation.ViewModel
 
         public CellGridViewModel(Location start, Location goal)
         {
-            ChangeCellState(start, CellState.Start);
-            ChangeCellState(start, CellState.Goal);
-
             // todo: возможность задавать размер динамически
             var width = 25;
             var height = 25;
@@ -79,6 +76,9 @@ namespace PathFindingVisualisation.ViewModel
                     });
                 }
             }
+
+            ChangeCellState(start, CellState.Start);
+            ChangeCellState(goal, CellState.Goal);
         }
 
 
@@ -150,12 +150,12 @@ namespace PathFindingVisualisation.ViewModel
         {
             if (!isDrawing || cell == CellViewModel.Unset) return;
 
-            if (editMode == EditMode.SetEmpty)
+            if (editMode == EditMode.SetEmpty && cell.State != CellState.Start && cell.State != CellState.Goal)
             {
                 SetWalkable(cell, true);
 
             }
-            else if (editMode == EditMode.SetWall)
+            else if (editMode == EditMode.SetWall && cell.State != CellState.Start && cell.State != CellState.Goal)
             {
                 SetWalkable(cell, false);
             }
