@@ -24,23 +24,30 @@ namespace PathFindingVisualisation.ViewModel
         {
             CellGrid = new CellGridViewModel(new Location(0, 0), new Location(9, 9));
             RunSearch();
-            Clear();
+            ClearPath();
         }
 
         [RelayCommand]
-        private void Clear()
+        private void ClearPath()
         {
             Path = new();
             CellGrid.Clear();
         }
 
         [RelayCommand]
+        private void ClearWalls()
+        {
+            ClearPath();
+            CellGrid.ClearWalls();
+        }
+
+        [RelayCommand]
         private void RunSearch()
         {
-            Clear();
+            ClearPath();
 
             // хз может подругому сделать
-            var walls = CellGrid.GetWalls();
+            var walls = CellGrid.Walls;
 
             // todo: убрать константы
             var width = 25;
@@ -59,7 +66,6 @@ namespace PathFindingVisualisation.ViewModel
             //grid = GridFromString();
             PathFinder searcher = GetFinder();
 
-            // todo: показывать путь
             // todo: отображение результатов в виде анимации
             var result = searcher.FindPath(grid, start, goal, Heuristics.Manhattan);
             foreach ((var key, var value) in result)

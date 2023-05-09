@@ -20,8 +20,9 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel>
-            <Button Content="Алгоритм" Command="{Binding RunSearchCommand}" Margin="5"/>
-            <Button Content="Очистить" Command="{Binding ClearCommand}" Margin="5"/>
+            <Button Content="Найти путь" Command="{Binding RunSearchCommand}" Margin="5"/>
+            <Button Content="Очистить путь" Command="{Binding ClearPathCommand}" Margin="5"/>
+            <Button Content="Очистить стены" Command="{Binding ClearWallsCommand}" Margin="5"/>
         </StackPanel>
         <View:CellGrid Grid.Column="1" DataContext="{Binding CellGrid}"/>
         <Polyline Grid.Column="1" Stroke="DarkBlue" Points="{Binding Path}" StrokeThickness="3"/>

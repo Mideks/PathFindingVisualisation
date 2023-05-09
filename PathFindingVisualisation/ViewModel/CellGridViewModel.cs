@@ -24,7 +24,10 @@ namespace PathFindingVisualisation.ViewModel
             MoveGoal
         }
 
-        private HashSet<Location> walls = new();
+        public IEnumerable<Location> Walls => 
+            Cells.Where(c => c.State == CellState.Wall)
+            .Select(c => new Location(c.X, c.Y));
+
         private Dictionary<Location, CellState> changedCellStates = new();
         private bool isDrawing = true;
 
@@ -96,6 +99,15 @@ namespace PathFindingVisualisation.ViewModel
             changedCellStates.Clear();
         }
 
+        public void ClearWalls()
+        {
+            foreach (var cell in Cells)
+            {
+                if (cell.State == CellState.Wall) 
+                    cell.State = CellState.Empty;
+            }
+        }
+
         private void SetWalkable(CellViewModel cell, bool walkable)
         {
             var location = new Location(cell.X, cell.Y);
@@ -105,12 +117,10 @@ namespace PathFindingVisualisation.ViewModel
                 // default is Empty
                 var state = changedCellStates.GetValueOrDefault(location);
                 ChangeCellState(cell, state);
-                walls.Remove(location);
             }
             else
             {
                 ChangeCellState(cell, CellState.Wall);
-                walls.Add(location);
             }
         }
 
@@ -136,12 +146,6 @@ namespace PathFindingVisualisation.ViewModel
                 changedCellStates[location] = cell.State;
             }
         }
-
-        public List<Location> GetWalls()
-        {
-            return walls.ToList();
-        }
-
         #endregion
 
         #region Commands
@@ -153,18 +157,15 @@ namespace PathFindingVisualisation.ViewModel
             if (editMode == EditMode.SetEmpty && cell.State != CellState.Start && cell.State != CellState.Goal)
             {
                 SetWalkable(cell, true);
-
             }
             else if (editMode == EditMode.SetWall && cell.State != CellState.Start && cell.State != CellState.Goal)
             {
                 SetWalkable(cell, false);
             }
-            // не должно заменять стены и конечную точку
             else if (editMode == EditMode.MoveStart && cell.State != CellState.Wall && cell.State != CellState.Goal)
             {
                 Start = new Location(cell.X, cell.Y);
             }
-            // не должно заменять стены и начальную точку
             else if (editMode == EditMode.MoveGoal && cell.State != CellState.Wall && cell.State != CellState.Start)
             {
                 Goal = new Location(cell.X, cell.Y);
