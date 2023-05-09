@@ -31,7 +31,7 @@ namespace PathFindingVisualisation.ViewModel
         private void ClearPath()
         {
             Path = new();
-            CellGrid.Clear();
+            CellGrid.ClearPath();
         }
 
         [RelayCommand]

@@ -28,7 +28,7 @@ namespace PathFindingVisualisation.ViewModel
             Cells.Where(c => c.State == CellState.Wall)
             .Select(c => new Location(c.X, c.Y));
 
-        private Dictionary<Location, CellState> changedCellStates = new();
+        private Dictionary<Location, CellState> dirtyCellStates = new();
         private bool isDrawing = true;
 
         private EditMode editMode;
@@ -43,7 +43,7 @@ namespace PathFindingVisualisation.ViewModel
             }
             set
             {
-                ChangeCellState(Start, changedCellStates.GetValueOrDefault(Start));
+                ChangeCellState(Start, dirtyCellStates.GetValueOrDefault(Start));
                 ChangeCellState(value, CellState.Start);
             }
         } 
@@ -56,7 +56,7 @@ namespace PathFindingVisualisation.ViewModel
             }
             set
             {
-                ChangeCellState(Goal, changedCellStates.GetValueOrDefault(Goal));
+                ChangeCellState(Goal, dirtyCellStates.GetValueOrDefault(Goal));
                 ChangeCellState(value, CellState.Goal);
             }
         }
@@ -86,7 +86,7 @@ namespace PathFindingVisualisation.ViewModel
 
 
         #region Methods
-        public void Clear()
+        public void ClearPath()
         {
             foreach (var cell in Cells)
             {
@@ -96,7 +96,7 @@ namespace PathFindingVisualisation.ViewModel
                     ChangeCellState(new Location(cell.X, cell.Y), CellState.Empty);
             }
 
-            changedCellStates.Clear();
+            dirtyCellStates.Clear();
         }
 
         public void ClearWalls()
@@ -115,7 +115,7 @@ namespace PathFindingVisualisation.ViewModel
             if (walkable)
             {
                 // default is Empty
-                var state = changedCellStates.GetValueOrDefault(location);
+                var state = dirtyCellStates.GetValueOrDefault(location);
                 ChangeCellState(cell, state);
             }
             else
@@ -137,13 +137,13 @@ namespace PathFindingVisualisation.ViewModel
         {
             cell.State = state;
             var location = new Location(cell.X, cell.Y);
-            // Не считаем за изменения установку стен, смену начальной точки и конечной.
-            if (!changedCellStates.ContainsKey(location) &&
-                cell.State != CellState.Wall &&
-                cell.State != CellState.Start &&
-                cell.State != CellState.Goal)
+
+            // Помечаем "загрязнённые" клетки
+            if (state == CellState.Visited ||
+                state == CellState.Opened ||
+                state == CellState.Path)
             {
-                changedCellStates[location] = cell.State;
+                dirtyCellStates[location] = cell.State;
             }
         }
         #endregion
