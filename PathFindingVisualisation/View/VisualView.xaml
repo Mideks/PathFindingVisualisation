@@ -4,16 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Visual" Height="450" Width="800"
+        Title="Visual"
         xmlns:Model="clr-namespace:PathFindingVisualisation.Model"
         xmlns:ViewModel="clr-namespace:PathFindingVisualisation.ViewModel"
         xmlns:View="clr-namespace:PathFindingVisualisation.View"
         xmlns:local="clr-namespace:PathFindingVisualisation"
         d:DataContext="{d:DesignInstance Type=ViewModel:VisualViewModel}"
         >
-    <Window.Resources>
-        
-    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -23,20 +20,10 @@
             <Button Content="Найти путь" Command="{Binding RunSearchCommand}" Margin="5"/>
             <Button Content="Очистить путь" Command="{Binding ClearPathCommand}" Margin="5"/>
             <Button Content="Очистить стены" Command="{Binding ClearWallsCommand}" Margin="5"/>
+            <TextBlock Text="Скорость анимации"/>
+            <Slider Minimum="0" Maximum="200" Value="{Binding AnimationSpeed}" AutoToolTipPlacement="TopLeft" />
         </StackPanel>
         <View:CellGrid Grid.Column="1" DataContext="{Binding CellGrid}"/>
         <Polyline Grid.Column="1" Stroke="DarkBlue" Points="{Binding Path}" StrokeThickness="3"/>
-        <!--<ItemsControl ItemsSource="{Binding CellGrid}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.Resources>
-                    <DataTemplate DataType="{x:Type ViewModel:CellGridViewModel}">
-                        <View:CellGrid DataContext="{Binding}"/>
-                    </DataTemplate>
-                </ItemsControl.Resources>
-            </ItemsControl>-->
     </Grid>
 </Window>
