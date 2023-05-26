@@ -10,74 +10,69 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100"
              x:Name="this"
-             RenderTransformOrigin="0.5,0.5"
-             Canvas.ZIndex="1"
+             RenderTransformOrigin="0.5,0.5" Background="GreenYellow"   
              d:DataContext="{d:DesignInstance Type=ViewModel:CellViewModel}">
     <UserControl.Resources>
         <Converters:LocationConverter x:Key="LocationConverter" />
-        <sys:Double x:Key="CellSize">25</sys:Double>
+        <sys:Double x:Key="CellSize">50</sys:Double>
+        <Style x:Key="CellColorize" TargetType="{x:Type Shape}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding State}" Value="Start">
+                    <Setter Property="Fill" Value="#FFFF00" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Goal">
+                    <Setter Property="Fill" Value="#FF0000" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Wall">
+                    <Setter Property="Fill" Value="#202020" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Empty">
+                    <Setter Property="Fill" Value="#FFFFFF" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Visited">
+                    <Setter Property="Fill" Value="#9999CC" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Opened">
+                    <Setter Property="Fill" Value="#CCCCFF" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Path">
+                    <Setter Property="Fill" Value="#90EE90" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
-   
-    <Border BorderThickness="2" BorderBrush="DarkCyan" >
-        <StackPanel>
-            <Rectangle RenderTransformOrigin="0.5,0.5"
-                   Height="{StaticResource CellSize}" 
-                   Width="{StaticResource CellSize}">
-                <Rectangle.Style>
-                    <Style TargetType="{x:Type Rectangle}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding State}" Value="Start">
-                                <Setter Property="Fill" Value="#FFFF00" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding State}" Value="Goal">
-                                <Setter Property="Fill" Value="#FF0000" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding State}" Value="Wall">
-                                <Setter Property="Fill" Value="#404040" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding State}" Value="Empty">
-                                <Setter Property="Fill" Value="#FFFFFF" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding State}" Value="Visited">
-                                <Setter Property="Fill" Value="#9999CC" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding State}" Value="Opened">
-                                <Setter Property="Fill" Value="#CCCCFF" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding State}" Value="Path">
-                                <Setter Property="Fill" Value="#90EE90" />
-                            </DataTrigger>
-                            
 
-                        </Style.Triggers>
-                    </Style>
-                </Rectangle.Style>
-            </Rectangle>
-        </StackPanel>
-    </Border>
-    <UserControl.RenderTransform>
-        <TransformGroup>
-            <ScaleTransform x:Name="scaleTransform" ScaleX="1" ScaleY="1" />
-            <SkewTransform/>
-            <RotateTransform Angle="0" />
-            <TranslateTransform 
-                X="{Binding X, Converter={StaticResource LocationConverter},ConverterParameter={StaticResource CellSize}}" 
-                Y="{Binding Y, Converter={StaticResource LocationConverter},ConverterParameter={StaticResource CellSize}}"/>
-        </TransformGroup>
-    </UserControl.RenderTransform>
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="MouseMove">
-            <BeginStoryboard>
-                <Storyboard AutoReverse="True" FillBehavior="Stop">
-                    <DoubleAnimation Storyboard.TargetName="scaleTransform"
+    <Rectangle RenderTransformOrigin="0.5,0.5"
+                Stroke="DarkCyan"
+                StrokeThickness="1"
+                Height="{StaticResource CellSize}"
+                Width="{StaticResource CellSize}"
+                Style="{StaticResource CellColorize}">
+
+        <Rectangle.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform x:Name="scaleTransform" ScaleX="1" ScaleY="1" />
+                <SkewTransform/>
+                <RotateTransform Angle="0" />
+                <!--<TranslateTransform 
+                    X="{Binding X, Converter={StaticResource LocationConverter},ConverterParameter={StaticResource CellSize}}" 
+                    Y="{Binding Y, Converter={StaticResource LocationConverter},ConverterParameter={StaticResource CellSize}}"/>-->
+            </TransformGroup>
+        </Rectangle.RenderTransform>
+        <Rectangle.Triggers>
+            <EventTrigger RoutedEvent="MouseMove">
+                <BeginStoryboard>
+                    <Storyboard AutoReverse="True" FillBehavior="Stop">
+                        <DoubleAnimation Storyboard.TargetName="scaleTransform"
                                          Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                                         To="0.8" Duration="0:0:0.2"/>
-                    <DoubleAnimation Storyboard.TargetName="scaleTransform"
+                                         To="0.85" Duration="0:0:0.5"/>
+                        <DoubleAnimation Storyboard.TargetName="scaleTransform"
                                          Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                                         To="0.8" Duration="0:0:0.2"/>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </UserControl.Triggers>
+                                         To="0.85" Duration="0:0:0.5"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Rectangle.Triggers>
+    </Rectangle>
 
 </UserControl>

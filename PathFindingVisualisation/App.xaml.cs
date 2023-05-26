@@ -20,10 +20,10 @@ namespace PathFindingVisualisation
         {
             base.OnStartup(e);
 
-            // Создаем объект VisualViewModel
+            // Создаём объект VisualViewModel
             var viewModel = new VisualViewModel();
 
-            // Создаем объект VisualView
+            // Создаём объект VisualView
             var view = new VisualView
             {
                 // Привязываем VisualView к VisualViewModel

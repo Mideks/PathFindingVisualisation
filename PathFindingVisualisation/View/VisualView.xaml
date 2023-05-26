@@ -10,20 +10,32 @@
         xmlns:View="clr-namespace:PathFindingVisualisation.View"
         xmlns:local="clr-namespace:PathFindingVisualisation"
         d:DataContext="{d:DesignInstance Type=ViewModel:VisualViewModel}"
-        >
+        SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel>
+        <StackPanel Margin="5">
             <Button Content="Найти путь" Command="{Binding RunSearchCommand}" Margin="5"/>
             <Button Content="Очистить путь" Command="{Binding ClearPathCommand}" Margin="5"/>
             <Button Content="Очистить стены" Command="{Binding ClearWallsCommand}" Margin="5"/>
             <TextBlock Text="Скорость анимации"/>
             <Slider Minimum="0" Maximum="200" Value="{Binding AnimationSpeed}" AutoToolTipPlacement="TopLeft" />
         </StackPanel>
-        <View:CellGrid Grid.Column="1" DataContext="{Binding CellGrid}"/>
+        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5" >
+
+            <!--<Canvas Background="Violet" Height="300" Width="300" HorizontalAlignment="Left"  ClipToBounds="True">
+                <Rectangle Fill="LightCoral" Height="25" Width="25" Canvas.Left="290"/>
+            </Canvas>-->
+            <Viewbox Stretch="Fill">
+            </Viewbox>
+            <Border BorderBrush="Black" d:BorderThickness="1" HorizontalAlignment="Left">
+                <View:CellGrid d:Height="500" d:Width="500" Grid.Column="1"  DataContext="{Binding CellGrid}"/>
+            </Border>
+            <TextBlock Text="Какой-то статусбар:"/>
+            <TextBlock Text="{Binding Status}"/>
+        </StackPanel>
         <Polyline Grid.Column="1" Stroke="DarkBlue" Points="{Binding Path}" StrokeThickness="3"/>
     </Grid>
 </Window>
