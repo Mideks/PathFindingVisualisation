@@ -10,50 +10,73 @@
              xmlns:ViewModel="clr-namespace:PathFindingVisualisation.ViewModel"
              xmlns:View="clr-namespace:PathFindingVisualisation.View"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
              d:DataContext="{d:DesignInstance Type=ViewModel:CellGridViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <Converters:CellClickEventConverter x:Key="CellClickArgConverter"/>
+        <Converters:LocationConverter x:Key="LocationConverter" />
+        <sys:Double x:Key="CellSize">50</sys:Double>
+        <Style x:Key="tete1">
+            <Setter Property="Canvas.Top" Value="{Binding Location.X, 
+                                    Converter={StaticResource LocationConverter},
+                                    ConverterParameter={StaticResource CellSize}}"/>
+            <Setter Property="Canvas.Left" Value="{Binding Location.Y, 
+                                    Converter={StaticResource LocationConverter},
+                                    ConverterParameter={StaticResource CellSize}}"/>
+        </Style>
+        <Style x:Key="tete2">
+            <Setter Property="FrameworkElement.RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="scaleTransform" ScaleX="1" ScaleY="1" />
+                        <SkewTransform/>
+                        <RotateTransform Angle="0" />
+                        <TranslateTransform 
+                                X="{Binding Location.X, 
+                                    Converter={StaticResource LocationConverter},
+                                    ConverterParameter={StaticResource CellSize}}" 
+                                Y="{Binding Location.Y, 
+                                    Converter={StaticResource LocationConverter},
+                                    ConverterParameter={StaticResource CellSize}}"/>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </UserControl.Resources>
-    <Grid>
-        <ItemsControl ItemsSource="{Binding Cells}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDown">
-                    <i:InvokeCommandAction 
+    <ItemsControl ItemsSource="{Binding Cells}" 
+                  HorizontalAlignment="Left"
+                  ItemContainerStyle="{StaticResource ResourceKey=tete1}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Canvas Background="Red"/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type ViewModel:CellViewModel}">
+                <View:Cell DataContext="{Binding}"/>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDown">
+                <i:InvokeCommandAction 
                         Command="{Binding CellMouseDownCommand}"
                         PassEventArgsToCommand="True"
                         EventArgsConverter="{StaticResource CellClickArgConverter}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseUp">
-                    <i:InvokeCommandAction 
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseUp">
+                <i:InvokeCommandAction 
                         Command="{Binding CellMouseUpCommand}"
                         PassEventArgsToCommand="True"
                         EventArgsConverter="{StaticResource CellClickArgConverter}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="PreviewMouseMove">
-                    <i:InvokeCommandAction 
+            </i:EventTrigger>
+            <i:EventTrigger EventName="PreviewMouseMove">
+                <i:InvokeCommandAction 
                         Command="{Binding CellMouseMoveCommand}"
                         PassEventArgsToCommand="True"
                         EventArgsConverter="{StaticResource CellClickArgConverter}"/>
-                </i:EventTrigger>
-                <!--<i:EventTrigger EventName="MouseLeave">
-                    <i:InvokeCommandAction 
-                        Command="{Binding CellLeaveCommand}"
-                        PassEventArgsToCommand="True"
-                        EventArgsConverter="{StaticResource CellClickArgConverter}"/>
-                </i:EventTrigger>-->
-            </i:Interaction.Triggers>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.Resources>
-                <DataTemplate DataType="{x:Type ViewModel:CellViewModel}">
-                    <View:Cell DataContext="{Binding}"/>
-                </DataTemplate>
-            </ItemsControl.Resources>
-        </ItemsControl>
-    </Grid>
-
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+    </ItemsControl>
 </UserControl>

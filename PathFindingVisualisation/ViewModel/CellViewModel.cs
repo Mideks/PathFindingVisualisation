@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PathFindingVisualisation.ViewModel
+namespace PathFindingVisualization.ViewModel
 {
     public partial class CellViewModel : ObservableObject
     {

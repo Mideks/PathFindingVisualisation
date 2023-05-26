@@ -1,4 +1,4 @@
-﻿using PathFindingVisualisation.ViewModel;
+﻿using PathFindingVisualization.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace PathFindingVisualisation.Converters
+namespace PathFindingVisualization.Converters
 {
     public class CellClickEventConverter : IValueConverter
     {

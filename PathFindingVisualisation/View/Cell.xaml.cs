@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PathFindingVisualisation.View
+namespace PathFindingVisualization.View
 {
     /// <summary>
     /// Логика взаимодействия для Cell.xaml

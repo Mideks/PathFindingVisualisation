@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace PathFindingVisualisation.View
+namespace PathFindingVisualization.View
 {
     /// <summary>
     /// Логика взаимодействия для Visual.xaml
