@@ -1,5 +1,5 @@
-﻿using PathFindingVisualization.View;
-using PathFindingVisualization.ViewModel;
+﻿using PathFindingVisualisation.View;
+using PathFindingVisualisation.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace PathFindingVisualization
+namespace PathFindingVisualisation
 {
     /// <summary>
     /// Interaction logic for App.xaml

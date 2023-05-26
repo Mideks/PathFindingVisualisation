@@ -9,8 +9,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.Drawing;
 using CommunityToolkit.Mvvm.Input;
 
-namespace PathFindingVisualization.ViewModel
+namespace PathFindingVisualisation.ViewModel
 {
+
+
     public partial class CellGridViewModel : ObservableObject
     {
         #region Varribles
@@ -42,13 +44,8 @@ namespace PathFindingVisualization.ViewModel
             }
             set
             {
-                var start = Start;
-                if (!start.Equals(value))
-                {
-                    ChangeCellState(start, dirtyCellStates.GetValueOrDefault(start));
-                    ChangeCellState(value, CellState.Start);
-                    OnPropertyChanged(nameof(Start));
-                }
+                ChangeCellState(Start, dirtyCellStates.GetValueOrDefault(Start));
+                ChangeCellState(value, CellState.Start);
             }
         } 
         public Location Goal
@@ -60,13 +57,8 @@ namespace PathFindingVisualization.ViewModel
             }
             set
             {
-                var goal = Goal;
-                if(!goal.Equals(value))
-                {
-                    ChangeCellState(goal, dirtyCellStates.GetValueOrDefault(goal));
-                    ChangeCellState(value, CellState.Goal);
-                    OnPropertyChanged(nameof(Goal));
-                }
+                ChangeCellState(Goal, dirtyCellStates.GetValueOrDefault(Goal));
+                ChangeCellState(value, CellState.Goal);
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PathFinding;
-using PathFindingVisualization.Model;
+using PathFindingVisualisation.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace PathFindingVisualization.ViewModel
+namespace PathFindingVisualisation.ViewModel
 {
     public partial class VisualViewModel : ObservableObject
     {
@@ -22,32 +22,23 @@ namespace PathFindingVisualization.ViewModel
         [ObservableProperty]
         private PointCollection path = new();
         [ObservableProperty]
-        private int cellSize = 50;
+        private int cellSize = 25;
         [ObservableProperty]
         private int animationSpeed;
 
-        [ObservableProperty]
-        private string? status;
         
         private CancellationTokenSource? cancelAnimationTokenSource;
 
 
         public VisualViewModel()
         {
-            const int width = 10;
-            const int height = 10;
+            const int width = 25;
+            const int height = 25;
             AnimationSpeed = 20;
 
             CellGrid = new CellGridViewModel(new Location(0, 0), new Location(9, 9), width, height);
             //RunSearch();
             //ClearPath();
-
-            cellGrid.PropertyChanged += this.CellGrid_PropertyChanged;
-        }
-
-        private void CellGrid_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            Status = $"{e.PropertyName} изменился";
         }
 
         [RelayCommand]
@@ -72,24 +63,25 @@ namespace PathFindingVisualization.ViewModel
             HeuristicFunction heuristic = Heuristics.Manhattan;
             var result = searcher.FindPath(grid, start, goal, heuristic);
 
-            await StartAnimation(result, goal);
+            await StartAnimation(result);
+
+            CreatePath(result, goal);
 
             CellGrid.ChangeCellState(start, CellState.Start);
             CellGrid.ChangeCellState(goal, CellState.Goal);
         }
 
-        private async Task StartAnimation(Dictionary<Location, VisitedLocation> result, Location goal)
+        private async Task StartAnimation(Dictionary<Location, VisitedLocation> result)
         {
+            if (AnimationSpeed == 0)
+            {
+                ShowResult(result);
+                return;
+            }
+
             this.cancelAnimationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancelAnimationTokenSource.Token;
-
-            if (AnimationSpeed == 0)
-                ShowResult(result);
-            else
-                await AnimateSearchResult(result, cancellationToken);
-
-            if (!cancellationToken.IsCancellationRequested)
-                CreatePath(result, goal);
+            await AnimateSearchResult(result, cancellationToken);
         }
 
         private void StopAnimation()
@@ -99,16 +91,17 @@ namespace PathFindingVisualization.ViewModel
 
         private async Task AnimateSearchResult(Dictionary<Location, VisitedLocation> result, CancellationToken cancellationToken)
         {
+            // todo: отображение результатов в виде анимации
+
             foreach ((var key, var value) in result)
             {
                 if (cancellationToken.IsCancellationRequested) return;
                 var delay = AnimationSpeed == 0 ? 1 : 1000 / AnimationSpeed;
                 ChangeCell(key, value);
-                await Task.Delay(delay, CancellationToken.None);
+                await Task.Delay(delay, cancellationToken);
             }
         }
 
-        // todo: направления не для диаганалей только, нужно сделать с диаганалями потом
         private readonly int[][] directions = new[]
         {
             new[] {0, 1},

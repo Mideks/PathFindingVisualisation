@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace PathFindingVisualization.Converters
+namespace PathFindingVisualisation.Converters
 {
     public class LocationConverter : IValueConverter
     {
