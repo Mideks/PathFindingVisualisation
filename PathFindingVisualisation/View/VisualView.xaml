@@ -20,14 +20,19 @@
             <Button Content="Найти путь" Command="{Binding RunSearchCommand}" Margin="5"/>
             <Button Content="Очистить путь" Command="{Binding ClearPathCommand}" Margin="5"/>
             <Button Content="Очистить стены" Command="{Binding ClearWallsCommand}" Margin="5"/>
-            <TextBlock Text="Скорость анимации"/>
-            <Slider Minimum="0" Maximum="200" Value="{Binding AnimationSpeed}" AutoToolTipPlacement="TopLeft" />
+            <TextBlock Text="Скорость анимации" Margin="5"/>
+            <Slider Minimum="0" Maximum="200" Value="{Binding AnimationSpeed}" AutoToolTipPlacement="TopLeft" Margin="5"/>
+
+            <GroupBox Header="Эвристика">
+                <StackPanel>
+                    <RadioButton Content="Манхетанская" Command="{Binding HeuristicSelectedCommand}" CommandParameter="Manhattan" IsChecked="True"/>
+                    <RadioButton Content="Эвклидова" Command="{Binding HeuristicSelectedCommand}" CommandParameter="Euclidean"/>
+                    <RadioButton Content="Октальная" Command="{Binding HeuristicSelectedCommand}" CommandParameter="Octile"/>
+                    <RadioButton Content="Чебушева" Command="{Binding HeuristicSelectedCommand}" CommandParameter="Chebyshev"/>
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5" >
-
-            <!--<Canvas Background="Violet" Height="300" Width="300" HorizontalAlignment="Left"  ClipToBounds="True">
-                <Rectangle Fill="LightCoral" Height="25" Width="25" Canvas.Left="290"/>
-            </Canvas>-->
             <Viewbox Stretch="Fill">
             </Viewbox>
             <Border BorderBrush="Black" d:BorderThickness="1" HorizontalAlignment="Left">

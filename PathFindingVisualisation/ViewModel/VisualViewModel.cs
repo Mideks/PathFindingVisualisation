@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PathFinding;
+using PathFindingVisualisation.Enums;
 using PathFindingVisualisation.Model;
 using PathFindingVisualisation.ViewModel;
 using System;
@@ -32,6 +33,7 @@ namespace PathFindingVisualisation.ViewModel
 
         private CancellationTokenSource? cancelAnimationTokenSource;
 
+        private Heuristic selectedHeuristic;
 
         public VisualViewModel()
         {
@@ -52,6 +54,13 @@ namespace PathFindingVisualisation.ViewModel
         }
 
         [RelayCommand]
+        private void HeuristicSelected(string heuristic)
+        {
+            _ = Enum.TryParse(heuristic, out selectedHeuristic);
+            Status = $"Выбранная эвристика: {selectedHeuristic}";
+        }
+
+        [RelayCommand]
         private async void RunSearch()
         {
             StopAnimation();
@@ -67,16 +76,29 @@ namespace PathFindingVisualisation.ViewModel
                 grid.SetWalkable(wall, false);
                 CellGrid.ChangeCellState(wall, CellState.Wall);
             }
-            var start = CellGrid.Start;
+
             var goal = CellGrid.Goal;
             var searcher = GetFinder();
-            HeuristicFunction heuristic = Heuristics.Manhattan;
+            var start = CellGrid.Start;
+            var heuristic = GetHeuristic();
             var result = searcher.FindPath(grid, start, goal, heuristic);
 
             await StartAnimation(result, goal);
 
-            CellGrid.ChangeCellState(start, CellState.Start);
-            CellGrid.ChangeCellState(goal, CellState.Goal);
+            //CellGrid.ChangeCellState(start, CellState.Start);
+            //CellGrid.ChangeCellState(goal, CellState.Goal);
+        }
+
+        private HeuristicFunction GetHeuristic()
+        {
+            return selectedHeuristic switch
+            {
+                Heuristic.Manhattan => Heuristics.Manhattan,
+                Heuristic.Chebyshev => Heuristics.Chebyshev,
+                Heuristic.Octile => Heuristics.Octile,
+                Heuristic.Euclidean => Heuristics.Euclidean,
+                _ => Heuristics.Manhattan,
+            };
         }
 
         private async Task StartAnimation(Dictionary<Location, VisitedLocation> result, Location goal)
@@ -141,7 +163,7 @@ namespace PathFindingVisualisation.ViewModel
             {
                 var state = value?.VisitedIndex is null ? CellState.Opened : CellState.Visited;
 
-                CellGrid.ChangeCellState(key, state);
+                CellGrid.ChangeCellState(key, state, false);
             }
         }
 
@@ -154,7 +176,7 @@ namespace PathFindingVisualisation.ViewModel
 */
             foreach (var location in path)
             {
-                CellGrid.ChangeCellState(location, CellState.Path);
+                CellGrid.ChangeCellState(location, CellState.Path, false);
             }
         }
 
