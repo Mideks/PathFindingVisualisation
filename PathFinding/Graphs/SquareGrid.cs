@@ -1,6 +1,6 @@
 ﻿//Here’s a graph representing a grid with weighted edges (the forest and walls example from the main page):
 
-namespace PathFinding
+namespace PathFinding.Graphs
 {
     public class SquareGrid : IWeightedGraph<Location>
     {
@@ -24,8 +24,8 @@ namespace PathFinding
 
         public SquareGrid(int width, int height)
         {
-            this.Width = width;
-            this.Height = height;
+            Width = width;
+            Height = height;
         }
 
         public void SetWalkable(Location location, bool walkable)

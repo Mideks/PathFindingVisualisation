@@ -1,4 +1,6 @@
-﻿namespace PathFinding
+﻿using PathFinding.Graphs;
+
+namespace PathFinding
 {
     public static class GridReader
     {

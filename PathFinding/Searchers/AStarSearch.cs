@@ -1,6 +1,8 @@
 ﻿//Here’s a graph representing a grid with weighted edges (the forest and walls example from the main page):
 
-namespace PathFinding
+using PathFinding.Graphs;
+
+namespace PathFinding.Searchers
 {
     public class VisitedLocation
     {

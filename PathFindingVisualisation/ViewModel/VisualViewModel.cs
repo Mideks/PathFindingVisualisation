@@ -169,7 +169,7 @@ namespace PathFindingVisualisation.ViewModel
 
         private void CreatePath(Dictionary<Location, VisitedLocation> result, Location goal)
         {
-            var path = Utils.Backtrace(result, goal);
+            var path = PathUtils.Backtrace(result, goal);
             // путь в качестве линии, а не закрашеных клеток. не знаю, может быть, когда-нибудь. (оно работает, но выглядит плохо)
             /*var cellSize = 64;
             Path = new(Utils.Backtrace(result, goal).Select(l => new Point((l.X + 0.5) * cellSize, (l.Y + 0.5) * cellSize)));

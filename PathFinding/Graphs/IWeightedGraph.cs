@@ -3,7 +3,7 @@
 // A* needs only a WeightedGraph and a location type L, and does *not*
 // have to be a grid. However, in the example code I am using a grid.
 
-namespace PathFinding
+namespace PathFinding.Graphs
 {
     public interface IWeightedGraph<L>
     {

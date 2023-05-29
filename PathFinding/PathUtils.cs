@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PathFinding
 {
-    public class Utils
+    public class PathUtils
     {
         public static List<Location> Backtrace(Dictionary<Location, VisitedLocation> searchResult, Location goal)
         {

@@ -1,4 +1,6 @@
 ﻿using PathFinding;
+using PathFinding.Graphs;
+using PathFinding.Searchers;
 using System.Diagnostics;
 using System.Text;
 
@@ -90,7 +92,7 @@ namespace PathFindingConsole
             }
             else if (renderType == RenderType.PathOnly)
             {
-                var trace = Utils.Backtrace(searchResult, goal);
+                var trace = PathUtils.Backtrace(searchResult, goal);
                 for (int i = 0; i < trace.Count - 1; i++)
                     matrix[trace[i].Y][trace[i].X] = GetDirectionSymbol(trace[i], trace[i + 1]);
             }
