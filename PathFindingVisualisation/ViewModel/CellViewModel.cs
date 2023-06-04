@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using PathFinding;
+using PathFindingVisualisation.Enums;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,7 +14,7 @@ namespace PathFindingVisualisation.ViewModel
     {
         public static readonly CellViewModel Unset = new(0, 0);
 
-        
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Location))]
         private int x;
@@ -26,25 +27,14 @@ namespace PathFindingVisualisation.ViewModel
         [ObservableProperty]
         private CellState state;
 
-        
-        public Location Location => new (X, Y);
+
+        public Location Location => new(X, Y);
 
         public CellViewModel(int x, int y)
         {
-            
+
             this.x = x;
             this.y = y;
         }
-    }
-
-    public enum CellState
-    {
-        Empty,
-        Wall,
-        Start,
-        Goal,
-        Path,
-        Visited,
-        Opened,
     }
 }

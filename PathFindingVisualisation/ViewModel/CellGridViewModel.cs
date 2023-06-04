@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.Drawing;
 using CommunityToolkit.Mvvm.Input;
 using PathFindingVisualisation.ViewModel;
+using PathFindingVisualisation.Enums;
 
 namespace PathFindingVisualisation.ViewModel
 {

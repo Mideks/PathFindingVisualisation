@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PathFinding;
+using PathFinding.Searchers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +12,20 @@ namespace PathFinding
     {
         public static List<Location> Backtrace(Dictionary<Location, VisitedLocation> searchResult, Location goal)
         {
-            if (!searchResult.ContainsKey(goal)) return new List<Location>(); 
+            if (!searchResult.ContainsKey(goal)) return new List<Location>();
 
             var trace = new List<Location> { goal };
-            while (!goal.Equals(searchResult[goal].CameFrom))
+            var current = goal;
+            while (!current.Equals(searchResult[current].CameFrom))
             {
-                goal = searchResult[goal].CameFrom;
-                trace.Add(goal);
+                current = searchResult[current].CameFrom;
+                trace.Add(current);
             }
             trace.Reverse();
             return trace;
         }
+
     }
 }
+
+

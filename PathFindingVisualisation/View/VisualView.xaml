@@ -9,26 +9,49 @@
         xmlns:ViewModel="clr-namespace:PathFindingVisualisation.ViewModel"
         xmlns:View="clr-namespace:PathFindingVisualisation.View"
         xmlns:local="clr-namespace:PathFindingVisualisation"
+        xmlns:converters="clr-namespace:PathFindingVisualisation.Converters"
         d:DataContext="{d:DesignInstance Type=ViewModel:VisualViewModel}"
         SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <converters:VisibilityConvertor x:Key="VisibilityConvertor"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Margin="5">
-            <Button Content="Найти путь" Command="{Binding RunSearchCommand}" Margin="5"/>
+            <Button Content="Начать поиск" Command="{Binding RunSearchCommand}" Margin="5"/>
+            <!--<Button Content="Начать поиск" Command="{Binding RunSearchCommand}" Margin="5"
+                    Visibility="{Binding IsStarted, Converter={StaticResource VisibilityConvertor}, ConverterParameter=True}" />
+            <Button Content="Перезапуситить поиск" Command="{Binding RunSearchCommand}" Margin="5"
+                    Visibility="{Binding IsStarted, Converter={StaticResource VisibilityConvertor}, ConverterParameter=False}" />-->
+            <Button Content="Остановить поиск" Command="{Binding StopAnimationCommand}" Margin="5"/>
             <Button Content="Очистить путь" Command="{Binding ClearPathCommand}" Margin="5"/>
             <Button Content="Очистить стены" Command="{Binding ClearWallsCommand}" Margin="5"/>
-            <TextBlock Text="Скорость анимации" Margin="5"/>
-            <Slider Minimum="0" Maximum="200" Value="{Binding AnimationSpeed}" AutoToolTipPlacement="TopLeft" Margin="5"/>
-
+            
+            <GroupBox Header="Алгоритм поиска">
+                <StackPanel>
+                    <RadioButton Content="A*" Command="{Binding PathFinderSelectedCommand}" CommandParameter="AStar" IsChecked="True"/>
+                    <RadioButton Content="Дейкстра" Command="{Binding PathFinderSelectedCommand}" CommandParameter="Dijkstra"/>
+                    <RadioButton Content="BFS" Command="{Binding PathFinderSelectedCommand}" CommandParameter="BFS"/>
+                    <RadioButton Content="Жадный поиск" Command="{Binding PathFinderSelectedCommand}" CommandParameter="Greedy"/>
+                </StackPanel>
+            </GroupBox>
             <GroupBox Header="Эвристика">
                 <StackPanel>
                     <RadioButton Content="Манхетанская" Command="{Binding HeuristicSelectedCommand}" CommandParameter="Manhattan" IsChecked="True"/>
                     <RadioButton Content="Эвклидова" Command="{Binding HeuristicSelectedCommand}" CommandParameter="Euclidean"/>
                     <RadioButton Content="Октальная" Command="{Binding HeuristicSelectedCommand}" CommandParameter="Octile"/>
                     <RadioButton Content="Чебушева" Command="{Binding HeuristicSelectedCommand}" CommandParameter="Chebyshev"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Анимирование поиска">
+                <StackPanel>
+                    <TextBlock Text="Скорость анимации" Margin="5"/>
+                    <Slider Minimum="0" Maximum="200" Value="{Binding AnimationSpeed}" AutoToolTipPlacement="TopLeft" 
+                        IsEnabled="{Binding AnimationEnabled}" Margin="5" />
+                    <CheckBox Content="Анимировать поиск" IsChecked="{Binding AnimationEnabled}" Margin="5"/>
                 </StackPanel>
             </GroupBox>
         </StackPanel>

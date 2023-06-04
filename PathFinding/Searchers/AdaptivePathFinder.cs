@@ -4,18 +4,10 @@ using PathFinding.Graphs;
 
 namespace PathFinding.Searchers
 {
-    public class VisitedLocation
-    {
-        public Location CameFrom { get; set; }
-        public int? VisitedIndex { get; set; }
-        public double CostSoFar { get; set; } = double.MaxValue;
-        public double Heuristic { get; set; }
-    }
-
-    public class AStarSearch : PathFinder
+    public class AdaptivePathFinder : PathFinder
     {
         public override Dictionary<Location, VisitedLocation> FindPath(
-            IWeightedGraph<Location> graph, Location start, Location goal, HeuristicFunction heuristic)
+            IWeightedGraph<Location> graph, Location start, Location goal, HeuristicFunction? heuristic, bool calculateDistance)
         {
             var visited = new Dictionary<Location, VisitedLocation>();
             var frontier = new PriorityQueue<Location, double>();
@@ -38,7 +30,9 @@ namespace PathFinding.Searchers
 
                 foreach (var next in graph.Neighbors(current))
                 {
-                    double newCost = visited[current].CostSoFar + graph.Cost(current, next);
+                    double newCost = 
+                        calculateDistance ?
+                        visited[current].CostSoFar + graph.Cost(current, next) : 0;
 
                     if (!visited.TryGetValue(next, out var location))
                     {
@@ -53,9 +47,9 @@ namespace PathFinding.Searchers
 
                         var dx = Math.Abs(next.X - goal.X);
                         var dy = Math.Abs(next.Y - goal.Y);
+                        var h = heuristic?.Invoke(dx, dy) ?? 0;
 
-                        var h = heuristic(dx, dy);
-                        location.Heuristic = h;
+                        location.CalculatedHeuristic = h;
                         double priority = newCost + h;
 
                         frontier.Enqueue(next, priority);

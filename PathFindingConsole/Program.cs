@@ -40,11 +40,11 @@ namespace PathFindingConsole
             var start = new Location(0, 0);
             var goal = new Location(35, 30);
 
-            var astar = new AStarSearch();
+            var astar = new AdaptivePathFinder();
 
             //var stopwatch = new Stopwatch();
             //stopwatch.Start();
-            var searchResult = astar.FindPath(grid, start, goal, Heuristics.Manhattan);
+            var searchResult = astar.FindPath(grid, start, goal, Heuristics.Manhattan, true);
             //stopwatch.Stop();
 
             for (var limit = 0; limit < searchResult.Max(v => v.Value.VisitedIndex) + 1; limit++)
@@ -104,8 +104,8 @@ namespace PathFindingConsole
                     {
                         RenderType.VisitedIndex => $"{value.VisitedIndex:D2}",
                         RenderType.CostSoFar => $"{value.CostSoFar:F0}",
-                        RenderType.Heuristic => $"{value.Heuristic:F0}",
-                        RenderType.TotalCost => $"{value.Heuristic + value.CostSoFar:F0}",
+                        RenderType.Heuristic => $"{value.CalculatedHeuristic:F0}",
+                        RenderType.TotalCost => $"{value.CalculatedHeuristic + value.CostSoFar:F0}",
                         RenderType.Arrows => GetDirectionSymbol(value.CameFrom, key),
                         _ => throw new ArgumentOutOfRangeException(nameof(renderType), renderType, null)
                     };

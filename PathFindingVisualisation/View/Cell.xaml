@@ -10,7 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100"
              x:Name="this"
-             RenderTransformOrigin="0.5,0.5" Background="GreenYellow"   
+             RenderTransformOrigin="0.5,0.5" Background="YellowGreen"   
              d:DataContext="{d:DesignInstance Type=ViewModel:CellViewModel}">
     <UserControl.Resources>
         <Converters:LocationConverter x:Key="LocationConverter" />
