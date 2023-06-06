@@ -54,6 +54,7 @@
                     <CheckBox Content="Анимировать поиск" IsChecked="{Binding AnimationEnabled}" Margin="5"/>
                 </StackPanel>
             </GroupBox>
+            <CheckBox Content="Адаптивный поиск" IsChecked="{Binding AdaptiveSearchEnabled}"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5" >
             <Viewbox Stretch="Fill">

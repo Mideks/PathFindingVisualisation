@@ -1,18 +1,27 @@
-﻿using PathFinding;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using PathFinding;
+using PathFindingVisualisation.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Drawing;
-using CommunityToolkit.Mvvm.Input;
-using PathFindingVisualisation.ViewModel;
-using PathFindingVisualisation.Enums;
 
 namespace PathFindingVisualisation.ViewModel
 {
+    public class WalkableChangedEventArgs : EventArgs
+    {
+        public WalkableChangedEventArgs(Location location, bool isWalkable)
+        {
+            this.Location = location;
+            this.IsWalkable = isWalkable;
+        }
+
+        public Location Location { get; }
+
+        public bool IsWalkable { get; }
+    }
+
     public partial class CellGridViewModel : ObservableObject
     {
         #region Varribles
@@ -26,8 +35,8 @@ namespace PathFindingVisualisation.ViewModel
         }
 
         public IEnumerable<Location> Walls =>
-            Cells.Where(c => c.State == CellState.Wall)
-            .Select(c => new Location(c.X, c.Y));
+            this.Cells.Where(c => c.State == CellState.Wall)
+            .Select(c => c.Location);
 
         private readonly Dictionary<Location, CellState> dirtyCellStates = new();
         private bool isDrawing = true;
@@ -39,17 +48,18 @@ namespace PathFindingVisualisation.ViewModel
         {
             get
             {
-                var cell = Cells.First(c => c.State == CellState.Start);
-                return new Location(cell.X, cell.Y);
+                var cell = this.Cells.First(c => c.State == CellState.Start);
+                return cell.Location;
             }
             set
             {
-                var start = Start;
+                var start = this.Start;
+
                 if (!start.Equals(value))
                 {
-                    ChangeCellState(start, dirtyCellStates.GetValueOrDefault(start));
-                    ChangeCellState(value, CellState.Start);
-                    OnPropertyChanged(nameof(Start));
+                    this.ChangeCellState(start, this.dirtyCellStates.GetValueOrDefault(start));
+                    this.ChangeCellState(value, CellState.Start);
+                    this.OnPropertyChanged(nameof(this.Start));
                 }
             }
         }
@@ -57,17 +67,17 @@ namespace PathFindingVisualisation.ViewModel
         {
             get
             {
-                var cell = Cells.First(c => c.State == CellState.Goal);
-                return new Location(cell.X, cell.Y);
+                var cell = this.Cells.First(c => c.State == CellState.Goal);
+                return cell.Location;
             }
             set
             {
-                var goal = Goal;
+                var goal = this.Goal;
                 if (!goal.Equals(value))
                 {
-                    ChangeCellState(goal, dirtyCellStates.GetValueOrDefault(goal));
-                    ChangeCellState(value, CellState.Goal);
-                    OnPropertyChanged(nameof(Goal));
+                    this.ChangeCellState(goal, this.dirtyCellStates.GetValueOrDefault(goal));
+                    this.ChangeCellState(value, CellState.Goal);
+                    this.OnPropertyChanged(nameof(this.Goal));
                 }
             }
         }
@@ -84,30 +94,30 @@ namespace PathFindingVisualisation.ViewModel
 
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++)
-                    Cells.Add(new(x, y) { State = CellState.Empty });
+                    this.Cells.Add(new(x, y) { State = CellState.Empty });
 
-            ChangeCellState(start, CellState.Start);
-            ChangeCellState(goal, CellState.Goal);
+            this.ChangeCellState(start, CellState.Start);
+            this.ChangeCellState(goal, CellState.Goal);
         }
 
 
         #region Methods
         public void ClearPath()
         {
-            foreach (var cell in Cells)
+            foreach (var cell in this.Cells)
             {
                 if (cell.State == CellState.Visited ||
                     cell.State == CellState.Opened ||
                     cell.State == CellState.Path)
-                    ChangeCellState(new Location(cell.X, cell.Y), CellState.Empty, false);
+                    this.ChangeCellState(new Location(cell.X, cell.Y), CellState.Empty, false);
             }
 
-            dirtyCellStates.Clear();
+            this.dirtyCellStates.Clear();
         }
 
         public void ClearWalls()
         {
-            foreach (var cell in Cells)
+            foreach (var cell in this.Cells)
             {
                 if (cell.State == CellState.Wall)
                     cell.State = CellState.Empty;
@@ -117,24 +127,25 @@ namespace PathFindingVisualisation.ViewModel
         private void SetWalkable(CellViewModel cell, bool walkable)
         {
             var state = walkable ?
-                dirtyCellStates.GetValueOrDefault(new Location(cell.X, cell.Y)) :
+                this.dirtyCellStates.GetValueOrDefault(new Location(cell.X, cell.Y)) :
                 CellState.Wall;
 
-            ChangeCellState(cell, state);
+            this.ChangeCellState(cell, state);
+            OnWalkableChangedEvent(new WalkableChangedEventArgs(cell.Location, walkable));
         }
 
         public void ChangeCellState(Location location, CellState state, bool canChangeStartAndGoal = true)
         {
-            var cell = GetCell(location);
+            var cell = this.GetCell(location);
             if (cell != null)
             {
-                ChangeCellState(cell, state, canChangeStartAndGoal);
+                this.ChangeCellState(cell, state, canChangeStartAndGoal);
             }
         }
 
         public CellViewModel? GetCell(Location location)
         {
-            return Cells.FirstOrDefault(c => c.Location.Equals(location));
+            return this.Cells.FirstOrDefault(c => c.Location.Equals(location));
         }
 
         private void ChangeCellState(CellViewModel cell, CellState state, bool canChangeStartAndGoal = true)
@@ -149,7 +160,7 @@ namespace PathFindingVisualisation.ViewModel
                 state == CellState.Opened ||
                 state == CellState.Path)
             {
-                dirtyCellStates[location] = cell.State;
+                this.dirtyCellStates[location] = cell.State;
             }
         }
         #endregion
@@ -158,32 +169,32 @@ namespace PathFindingVisualisation.ViewModel
         [RelayCommand]
         private void CellMouseMove(CellViewModel cell)
         {
-            if (!isDrawing || cell == CellViewModel.Unset) return;
+            if (!this.isDrawing || cell == CellViewModel.Unset) return;
 
-            if (editMode == EditMode.SetEmpty && cell.State != CellState.Start && cell.State != CellState.Goal)
+            if (this.editMode == EditMode.SetEmpty && cell.State != CellState.Start && cell.State != CellState.Goal)
             {
-                SetWalkable(cell, true);
+                this.SetWalkable(cell, true);
             }
-            else if (editMode == EditMode.SetWall && cell.State != CellState.Start && cell.State != CellState.Goal)
+            else if (this.editMode == EditMode.SetWall && cell.State != CellState.Start && cell.State != CellState.Goal)
             {
-                SetWalkable(cell, false);
+                this.SetWalkable(cell, false);
             }
-            else if (editMode == EditMode.MoveStart && cell.State != CellState.Wall && cell.State != CellState.Goal)
+            else if (this.editMode == EditMode.MoveStart && cell.State != CellState.Wall && cell.State != CellState.Goal)
             {
-                Start = new Location(cell.X, cell.Y);
+                this.Start = new Location(cell.X, cell.Y);
             }
-            else if (editMode == EditMode.MoveGoal && cell.State != CellState.Wall && cell.State != CellState.Start)
+            else if (this.editMode == EditMode.MoveGoal && cell.State != CellState.Wall && cell.State != CellState.Start)
             {
-                Goal = new Location(cell.X, cell.Y);
+                this.Goal = new Location(cell.X, cell.Y);
             }
         }
 
         [RelayCommand]
         private void CellMouseDown(CellViewModel cell)
         {
-            isDrawing = true;
+            this.isDrawing = true;
 
-            editMode = cell.State switch
+            this.editMode = cell.State switch
             {
                 CellState.Wall => EditMode.SetEmpty,
                 CellState.Start => EditMode.MoveStart,
@@ -191,14 +202,24 @@ namespace PathFindingVisualisation.ViewModel
                 _ => EditMode.SetWall
             };
 
-            CellMouseMove(cell);
+            this.CellMouseMove(cell);
         }
 
         [RelayCommand]
         private void CellMouseUp(CellViewModel cell)
         {
-            isDrawing = false;
-            editMode = default;
+            this.isDrawing = false;
+            this.editMode = default;
+        }
+        #endregion
+
+        #region Events
+        public event EventHandler<WalkableChangedEventArgs>? WalkableChangedEvent;
+
+        protected virtual void OnWalkableChangedEvent(WalkableChangedEventArgs e)
+        {
+            EventHandler<WalkableChangedEventArgs>? handler = WalkableChangedEvent;
+            handler?.Invoke(this, e);
         }
         #endregion
     }

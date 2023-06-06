@@ -33,6 +33,8 @@ namespace PathFindingVisualisation.ViewModel
         private int animationSpeed;
         [ObservableProperty]
         private bool animationEnabled;
+        [ObservableProperty]
+        private bool adaptiveSearchEnabled;
 
         [ObservableProperty]
         private string? status;
@@ -60,11 +62,23 @@ namespace PathFindingVisualisation.ViewModel
 
             CellGrid = new CellGridViewModel(new Location(0, 0), new Location(9, 9), width, height);
             cellGrid.PropertyChanged += this.CellGrid_PropertyChanged;
+            cellGrid.WalkableChangedEvent += this.CellGrid_WalkableChangedEvent;
+        }
+
+        private void CellGrid_WalkableChangedEvent(object? sender, WalkableChangedEventArgs e)
+        {
+            if (e.IsWalkable)
+                Status = $"В клетке [{e.Location.X}, {e.Location.Y}] удалена стена";
+            else
+                Status = $"В клетке [{e.Location.X}, {e.Location.Y}] установлена стена";
+
+            if (AdaptiveSearchEnabled) RunSearch(); 
         }
 
         private void CellGrid_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             Status = $"{e.PropertyName} изменился";
+            if (AdaptiveSearchEnabled) RunSearch();
         }
 
         [RelayCommand]
